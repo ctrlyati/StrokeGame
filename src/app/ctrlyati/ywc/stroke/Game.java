@@ -38,6 +38,7 @@ public class Game{
 	private static final boolean IS_ALWAYS_ON_TOP = false;
 	private static final boolean IS_RESIZABLE = false;
 	
+	private long mStartTime = 0;
 	private long mTime = 0;
 	
 	private Vector mLastPosition;
@@ -192,22 +193,24 @@ public class Game{
 	public void start(YwcUser user){
 		mUser = user;
 		
+		mStartTime = new Date().getTime();
+		
 		Font font = new Font("Impact", Font.BOLD , 300);
 		Font smallFont = new Font("Impact", Font.PLAIN, 30);
 		
 		JLabel id = new JLabel();
-		id.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		id.setHorizontalAlignment(JLabel.CENTER);
 		id.setFont(smallFont);
-		id.setForeground(new Color(0xffeeeeee));
+		id.setForeground(new Color(0x33ffffff));
 		id.setText(user.getId());
 		
 		mTimeText = new JLabel();
-		mTimeText.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		mTimeText.setHorizontalAlignment(JLabel.CENTER);
 		mTimeText.setFont(smallFont);
-		mTimeText.setForeground(new Color(0xffeeeeee));
+		mTimeText.setForeground(new Color(0x33ffffff));
 		
 		mScoreText = new JLabel();
-//		mScoreText.setBackground(new Color(0,0,0,0));
+//		mScoreText.setBackground(new Color(0xff000000));
 		mScoreText.setForeground(new Color(0xffffffff));
 		mScoreText.setSize(500, 300);
 		mScoreText.setFont(font);
@@ -258,10 +261,13 @@ public class Game{
 		}
 		mTestText.setText(debugText);
 		
-		long currentTime = (new Date().getTime());
+		long currentTime = new Date().getTime();
+		long remainTime = mStartTime+10*1000 - currentTime;
 		
-		mTimeText.setText("Time "+ (currentTime/1000/60)%10 + ":"+ (currentTime/1000)%10);
-		mScoreText.setText(""+Math.round(mUser.getScore()/100));
+		if(remainTime > 0){
+			mTimeText.setText("Time "+ (remainTime/1000/60) + ":"+ (remainTime/1000)%60);
+			mScoreText.setText(""+Math.round(mUser.getScore()/100));
+		}
 	}
 	
 	public static double round(double value, int places) {
